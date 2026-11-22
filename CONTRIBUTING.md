@@ -36,6 +36,58 @@ python -m venv .venv
 - `docs/`：设计与验证文档
 - `data/`：本地运行数据，不提交到 Git
 
+## 分支工作流
+
+每个独立功能、界面改动或问题修复都使用一个新的分支。`main` 只保留已经检查过、可以作为稳定版本的代码。
+
+开始一个新功能时，先同步主分支并创建功能分支：
+
+```powershell
+git switch main
+git pull origin main
+git switch -c feature/功能名称
+```
+
+分支名称可以按下面的形式书写：
+
+- `feature/download-location`：新增功能
+- `feature/ui-polish`：界面改造
+- `fix/hevc-preview`：问题修复
+- `docs/editing-logic`：文档修改
+
+开发过程中只在当前功能分支提交。提交前运行测试和语法检查：
+
+```powershell
+python -m pytest -q --basetemp .pytest-temp-local
+node --check app/static/app.js
+git status
+git diff --check
+```
+
+确认功能正常后，再把分支推送到 GitHub：
+
+```powershell
+git push -u origin feature/功能名称
+```
+
+检查通过后合并到主分支：
+
+```powershell
+git switch main
+git pull origin main
+git merge --no-ff feature/功能名称
+git push origin main
+```
+
+合并完成后可以删除已经完成的本地分支：
+
+```powershell
+git branch -d feature/功能名称
+git push origin --delete feature/功能名称
+```
+
+如果功能还没有检查完成，不要合并到 `main`。发现问题时继续在原功能分支修复，再重新运行检查。
+
 ## 修改流程
 
 1. 从当前 `main` 分支开始修改。
