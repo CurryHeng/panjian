@@ -1,0 +1,17 @@
+# Runtime and test output
+data/
+runtime-logs/
+.pytest_cache/
+.pytest-*/
+**/__pycache__/
+*.pyc
+# Local media and generated review output
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.m4v
+# Local secrets and browser state
+.env
+.env.*
