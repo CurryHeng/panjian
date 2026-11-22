@@ -16,7 +16,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, ConfigDict
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from app.media import export_clips, probe
+from app.media import export_clips, probe, run_ffmpeg
+import imageio_ffmpeg
 from app.highlights import build_plan, NoHighlights
 
 BASE = Path(__file__).resolve().parent
@@ -152,7 +153,24 @@ def create_app(data_dir=None):
     @app.get('/api/projects/{pid}/source')
     def source_video(pid: str):
         project = read(project_path(pid))
-        return FileResponse(project_path(pid).parent / project['source_name'])
+        directory = project_path(pid).parent
+        source = directory / project['source_name']
+        preview_name = project.get('preview_name')
+        if not preview_name:
+            reader = imageio_ffmpeg.read_frames(str(source))
+            try:
+                codec = next(reader).get('codec', '')
+            finally:
+                reader.close()
+            if codec in ('hevc', 'h265'):
+                preview = directory / 'browser-preview.mp4'
+                if not preview.exists():
+                    run_ffmpeg(['-y', '-i', source, '-map', '0:v:0', '-map', '0:a:0?', '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '23', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-movflags', '+faststart', preview])
+                project['preview_name'] = preview.name
+                write(project_path(pid), project)
+                preview_name = preview.name
+        return FileResponse(directory / (preview_name or project['source_name']))
+
 
     @app.put('/api/projects/{pid}/clips')
     def save_clips(pid: str, selection: Selections):
