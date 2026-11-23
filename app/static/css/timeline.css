@@ -1,0 +1,9 @@
+/* 时间轴：整段素材 + 已选回合色块 + 播放头 */
+.timeline-wrap{margin-top:8px}
+.tl-label{display:flex;justify-content:space-between;font-size:11px;letter-spacing:2px;color:var(--muted);margin-bottom:6px}
+.timeline{position:relative;height:56px;background:var(--panel);border:1px solid var(--line);cursor:pointer;overflow:hidden;background-image:repeating-linear-gradient(90deg,#ffffff14 0 1px,transparent 1px 5%)}
+.tl-track{position:absolute;inset:0}
+.tl-clip{position:absolute;top:8px;bottom:8px;min-width:4px;background:var(--lime);color:var(--ink);font:400 14px/1 var(--display);padding:4px 5px;overflow:hidden;white-space:nowrap;opacity:.92}
+.tl-clip:hover{opacity:1;background:#fff}
+.tl-head{position:absolute;top:0;bottom:0;left:0;width:2px;background:var(--text);pointer-events:none;box-shadow:0 0 0 1px var(--ink)}
+.tl-head:before{content:"";position:absolute;top:0;left:-5px;border:6px solid transparent;border-top-color:var(--text)}

@@ -1,0 +1,15 @@
+/* 首屏：大字裁切排版 + 荧光色块 + 上传区 */
+.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(320px,.8fr);gap:0;margin:0 -40px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero-copy{padding:56px 40px 44px;position:relative;z-index:1}
+.eyebrow{font-size:12px;letter-spacing:4px;font-weight:800;color:var(--lime);margin-bottom:18px}
+.hero h1{margin:0;font:400 clamp(56px,9.5vw,148px)/.88 var(--display);text-transform:uppercase;letter-spacing:-1px}
+.hero h1 span{display:block}
+.hero h1 .l2{color:var(--ink);background:var(--lime);display:inline-block;padding:0 .12em;margin:.04em 0}
+.hero h1 i{font-style:normal;color:var(--lime)}
+.sub{max-width:520px;margin:26px 0 0;font-size:15px;color:var(--muted);border-left:4px solid var(--lime);padding-left:14px}
+.import-bar{position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:22px;padding:40px;min-height:340px;border-left:1px solid var(--line);overflow:hidden;isolation:isolate}
+.import-bar:after{content:"";position:absolute;inset:0;z-index:-2;background:url(/static/img/frisbee-lin.jpg) 40% center/cover;filter:grayscale(1) contrast(1.25) brightness(.55)}
+.import-bar:before{content:"";position:absolute;inset:0;z-index:-1;background:url(/static/img/speedlines.svg) right top/70% 50% no-repeat,linear-gradient(180deg,#0a0a0a22,#0a0a0aee);pointer-events:none}.import-text,.import-bar .button{position:relative}
+.import-bar strong{font:400 30px/1.1 var(--display);letter-spacing:1px;display:block}
+.import-bar p{margin:10px 0 0;font-size:12px;color:var(--muted)}
+.import-bar .button{font-size:16px;padding:16px 22px}
