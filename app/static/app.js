@@ -33,7 +33,20 @@ function status() {
     card.querySelector('[data-action=down]').disabled = busy || i === clips.length-1;
   });
 }
+function renderTimeline() {
+  const d = project ? project.duration : 0;
+  $('tl-track').innerHTML = d ? clips.filter(c => validRange(c.start, c.end)).map(c => {
+    const i = clips.indexOf(c);
+    return `<span class="tl-clip" style="left:${c.start / d * 100}%;width:${(c.end - c.start) / d * 100}%" title="${escapeHtml(c.title)}">${String(i + 1).padStart(2, '0')}</span>`;
+  }).join('') : '';
+  movePlayhead();
+}
+function movePlayhead() {
+  const d = project ? project.duration : 0;
+  $('tl-head').style.left = d ? `${Math.min(100, $('video').currentTime / d * 100)}%` : '0';
+}
 function render() {
+  renderTimeline();
   $('count').textContent = clips.length;
   $('total').textContent = `共 ${clips.reduce((sum, c) => sum + Math.max(0, c.end - c.start), 0).toFixed(1)} 秒`;
   $('clips').innerHTML = clips.length ? clips.map((c, i) => `<article class="clip" data-index="${i}">
@@ -161,7 +174,12 @@ $('clips').addEventListener('input', event => {
   const key = event.target.dataset.key; if (!key) return;
   const index = Number(event.target.closest('.clip').dataset.index);
   clips[index][key] = ['start','end'].includes(key) ? Number(event.target.value) : event.target.value;
-  dirty = true; $('total').textContent = `共 ${clips.reduce((s,c) => s + Math.max(0,c.end-c.start),0).toFixed(1)} 秒`; status();
+  dirty = true; $('total').textContent = `共 ${clips.reduce((s,c) => s + Math.max(0,c.end-c.start),0).toFixed(1)} 秒`; renderTimeline(); status();
+});
+$('timeline').addEventListener('click', event => {
+  if (!project) return;
+  const box = $('timeline').getBoundingClientRect();
+  $('video').currentTime = Math.max(0, Math.min(1, (event.clientX - box.left) / box.width)) * project.duration;
 });
 let previewEnd = null;
 $('clips').addEventListener('click', event => {
@@ -191,7 +209,7 @@ $('clips').addEventListener('click', event => {
   dirty = true; render();
 });
 $('video').addEventListener('timeupdate', () => {
-  $('playhead').textContent = time($('video').currentTime);
+  $('playhead').textContent = time($('video').currentTime); movePlayhead();
   if (previewEnd !== null && $('video').currentTime >= previewEnd) { $('video').pause(); previewEnd = null; }
 });
 $('video').addEventListener('error', () => notice('浏览器不能预览该视频编码。建议使用 H.264 编码的 MP4；服务端导出仍可能可用。', true));

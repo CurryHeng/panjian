@@ -1,0 +1,19 @@
+@media(max-width:1100px){
+  .topbar{padding:14px 24px;gap:20px}
+  .top-meta a,.top-meta .dot{display:none}
+  .nav small{display:none}
+  main{padding:0 24px 48px}
+  .hero{margin:0 -24px;grid-template-columns:1fr}
+  .hero-copy{padding:40px 24px 28px}
+  .import-bar{min-height:0;border-left:0;border-top:1px solid var(--line);padding:28px 24px}
+  .workspace{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .nav-list{display:none}
+  .topbar{justify-content:space-between}
+  .project-picker{flex-wrap:wrap}
+  .project-picker select{max-width:100%;width:100%}
+  .range-fields{flex-wrap:wrap}
+  .range-fields>.button{width:100%}
+  .range-arrow{display:none}
+}
